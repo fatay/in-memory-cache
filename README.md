@@ -1,4 +1,4 @@
-# Let's Build Your Own Caching System
+# Let's Build Your Own Cache System
 
 ## 1. Introduction
 
