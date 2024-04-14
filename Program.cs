@@ -1,3 +1,6 @@
+using Memory_Cache.Model;
+using Microsoft.AspNetCore.Mvc;
+
 namespace Memory_Cache;
 
 public class Program
@@ -6,45 +9,33 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-        builder.Services.AddAuthorization();
-
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddSingleton<IMemCache, MemCache>();
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+        
+        app.MapGet("/cache/{key}", (string key, [FromServices] IMemCache cacheService)
+            => cacheService.Get<object>(key) ?? Results.NotFound("No data found."));
 
-        app.UseHttpsRedirection();
 
-        app.UseAuthorization();
-
-        var summaries = new[]
+        app.MapPost("/cache", async (CacheItem cacheItem, [FromServices] IMemCache cacheService) =>
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
-        app.MapGet("/weatherforecast", (HttpContext httpContext) =>
+            if (string.IsNullOrEmpty(cacheItem.Key))
             {
-                var forecast = Enumerable.Range(1, 5).Select(index =>
-                        new WeatherForecast
-                        {
-                            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                            TemperatureC = Random.Shared.Next(-20, 55),
-                            Summary = summaries[Random.Shared.Next(summaries.Length)]
-                        })
-                    .ToArray();
-                return forecast;
-            })
-            .WithName("GetWeatherForecast")
-            .WithOpenApi();
+                return Results.BadRequest("Invalid key or value.");
+            }
+
+            cacheService.Set(cacheItem.Key, cacheItem.Value, new CacheOptions { AbsoluteExpiration = TimeSpan.FromMinutes(5) });
+            return Results.Ok("Cached successfully");
+        });
+
 
         app.Run();
     }
