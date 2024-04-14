@@ -8,6 +8,14 @@ In-memory caching is a widely used method of storing data in a RAM to provide fa
 We know that the data stored in memory is volatile; this means all data can be lost if the power goes off or if the system crashes. 
 The capacity of data that can be stored is limited by the RAM capacity of the host of the application.
 
+```mermaid
+graph TD
+    A[Application] -- 1. Read data from cache if data exists --> B(Cache)
+    B -- 2. If it doesn't exist, retrieve the actual data from database --> C[Database]
+    C -- 3. Write data to cache that retrieved from db --> B
+
+```
+
 ### 1.2. Which Data Should Be Cached?
 Memory(RAM) is more expensive than hard disks, so scaling our cache system and deciding which data to cache play crucial roles in caching.
 Datas that frequently accessed and changes infrequently is a good choice for determining which data will be cached. 
@@ -41,7 +49,10 @@ its expiration time will be reset to 10 minutes from that point. If it is not ac
 
 ## 4. Let’s Code Our In-Memory Cache
 There are already built-in memory cache in dotnet environment, but i want to show background as well.
+To see the full example, you can check MemCache class or browse the minimal API endpoints and the rest of the repository.
 
-interface : 
+## 5. Conclusion
+In conclusion, caching is a vital component in the landscape of modern software development, especially for enhancing the performance and scalability of applications. 
+In this repo, I have attempted to provide a more detailed analysis of in-memory caching.
 
-
+Happy coding!
