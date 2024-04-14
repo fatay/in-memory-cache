@@ -1,4 +1,4 @@
-# Let's Build Your Own In-Memory Cache System
+# Let's Build Your Own In-Memory Cache
 
 ## 1. Introduction
 
