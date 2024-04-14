@@ -51,6 +51,12 @@ its expiration time will be reset to 10 minutes from that point. If it is not ac
 There are already built-in memory cache in dotnet environment, but i want to show background as well.
 To see the full example, you can check MemCache class or browse the minimal API endpoints and the rest of the repository.
 
+### 4.1. Why We Used ConcurrentDictionary?
+The ConcurrentDictionary is used in cache implementations to ensure thread-safe operations, maintain high performance under concurrent access, and offer scalability and ease of use for developers. These qualities are essential for an efficient caching system, particularly in server-side and multi-threaded applications.
+
+### 4.2. Why We Didn’t Use The IDisposable Interface?
+The MemoryCache primarily uses managed resources (like a ConcurrentDictionary). Managed resources are handled by the .NET Garbage Collector (GC), which automatically frees memory when objects are no longer in use. Therefore, there's no need for cleanup.
+
 ## 5. Conclusion
 In conclusion, caching is a vital component in the landscape of modern software development, especially for enhancing the performance and scalability of applications. 
 In this repo, I have attempted to provide a more detailed analysis of in-memory caching.
